@@ -4,9 +4,9 @@ import {
   HttpException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from './dto/users.dto';
+import { CreateUserDto } from './dto/create-users.dto';
 import { User } from '@prisma/client';
-import { PrismaService } from 'prisma/prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
@@ -51,14 +51,6 @@ export class UsersService {
       },
     });
     return signUp.email;
-  }
-
-  //유저 상세 조회 API입니다.
-  async getUserInfo(id: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: id },
-    });
-    return user;
   }
 
   //auth에서 사용되는 API입니다.

@@ -11,10 +11,10 @@ import { UsersService } from './users.service';
 import { AuthService } from 'src/auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
-import { CreateUserDto } from './dto/users.dto';
+import { CreateUserDto } from './dto/create-users.dto';
 import { RequestLoginDto } from 'src/auth/dto/request.login.dto';
-import { SuccessInterceptor } from 'src/common/interceptor/success.interceptor';
 import { UserEntity } from './entities/users.entity';
+import { SuccessInterceptor } from 'src/common/interceptor/success.interceptor';
 
 @Controller('users')
 @UseInterceptors(SuccessInterceptor)
@@ -38,11 +38,5 @@ export class UsersController {
   @Post('login')
   async logIn(@Body() data: RequestLoginDto) {
     return await this.authService.jwtLogIn(data);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('get')
-  getUserInfo(@CurrentUser() User) {
-    return this.usersService.getUserInfo(User.id);
   }
 }
