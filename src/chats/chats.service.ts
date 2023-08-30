@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { RoomEntity } from 'src/rooms/entities/room.entity';
-import { UserEntity } from 'src/users/entities/users.entity';
+import { NewUserDto } from './dto/new-user.dto';
 
 @Injectable()
 export class ChatsService {
   constructor(private prisma: PrismaService) {}
 
-  async newUser(user: UserEntity, room: RoomEntity) {
+  async newUser(newUser: NewUserDto) {
     await this.prisma.chat.create({
       data: {
-        userId: user.id,
-        roomId: room.id,
+        userId: newUser.userId,
+        roomId: newUser.roomId,
       },
     });
   }

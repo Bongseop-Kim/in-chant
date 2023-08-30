@@ -35,7 +35,7 @@ export class RoomsService {
     });
 
     const users = await Promise.all(
-      room.chat.map(async (item) => {
+      room?.chat.map(async (item) => {
         return await this.prisma.user.findUnique({
           where: { id: item.userId },
         });
