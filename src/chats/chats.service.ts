@@ -12,6 +12,7 @@ export class ChatsService {
       data: {
         userId: newUser.userId,
         roomId: newUser.roomId,
+        userName: newUser.userId,
       },
     });
   }

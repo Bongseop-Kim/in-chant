@@ -3,16 +3,21 @@ import {
   SubscribeMessage,
   MessageBody,
   ConnectedSocket,
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { ChatsService } from './chats.service';
 import { Logger } from '@nestjs/common';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { NewUserDto } from './dto/new-user.dto';
 import { CreateChatDto } from './dto/create-chat.dto';
 
 @WebSocketGateway({ cors: true })
 export class ChatsGateway {
   private logger = new Logger('chat');
+
+  @WebSocketServer()
+  server: Server;
+
   constructor(private readonly chatsService: ChatsService) {
     this.logger.log('constructor');
   }
@@ -35,16 +40,6 @@ export class ChatsGateway {
     this.logger.log('init');
   }
 
-  @SubscribeMessage('join_room')
-  joinRoom(@MessageBody() roomId: string, @ConnectedSocket() socket: Socket) {
-    socket.join(roomId);
-  }
-
-  @SubscribeMessage('leave_room')
-  leaveRoom(@MessageBody() roomId: string, @ConnectedSocket() socket: Socket) {
-    socket.leave(roomId);
-  }
-
   @SubscribeMessage('new_user')
   async handleNewUser(
     @MessageBody() newUser: NewUserDto,
@@ -57,15 +52,12 @@ export class ChatsGateway {
   }
 
   @SubscribeMessage('submit_chat')
-  async handleSubmitChat(
-    @MessageBody() createChat: CreateChatDto,
-    @ConnectedSocket() socket: Socket,
-  ) {
+  async handleSubmitChat(@MessageBody() createChat: CreateChatDto) {
     const socketObj = await this.chatsService.createChat(createChat);
+    console.log('메시지 발송' + createChat.message);
 
-    socket.to(createChat.roomId).emit('new_chat', {
+    this.server.emit(createChat.roomId, {
       message: socketObj.message,
-      // username: user.name,
       createdAt: socketObj.createdAt,
     });
   }

@@ -31,6 +31,7 @@ export class RoomsController {
       roomId: room.id,
       userId: user.id,
     });
+    return room.id;
   }
 
   @Get()

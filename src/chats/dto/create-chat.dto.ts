@@ -5,4 +5,5 @@ export class CreateChatDto extends PickType(ChatEntity, [
   'message',
   'roomId',
   'userId',
+  'userName',
 ]) {}
