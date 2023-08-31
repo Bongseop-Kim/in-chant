@@ -60,6 +60,7 @@ export class ChatsGateway {
       message: socketObj.message,
       createdAt: socketObj.createdAt,
       userName: socketObj.userName,
+      userId: socketObj.userId,
     });
   }
 }
