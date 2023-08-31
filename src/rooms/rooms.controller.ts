@@ -27,11 +27,9 @@ export class RoomsController {
     @CurrentUser() user: UserEntity,
   ) {
     const room = await this.roomsService.createRoom(createRoomDto);
-    const roomId = room.id;
-    const userId = user.id;
-    await this.roomsService.createUsersOnRooms({
-      roomId,
-      userId,
+    await this.roomsService.registerRoom({
+      roomId: room.id,
+      userId: user.id,
     });
   }
 

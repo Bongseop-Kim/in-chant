@@ -7,16 +7,15 @@ export class RoomsService {
   constructor(private prisma: PrismaService) {}
 
   async createRoom(createRoomDto: CreateRoomDto) {
-    const { title, password } = createRoomDto;
     const room = await this.prisma.room.create({
-      data: { title, password },
+      data: createRoomDto,
     });
 
     return room;
   }
 
-  async createUsersOnRooms({ roomId, userId }) {
-    await this.prisma.chat.create({
+  async registerRoom({ roomId, userId }) {
+    await this.prisma.member.create({
       data: { userId, roomId },
     });
   }
@@ -34,15 +33,7 @@ export class RoomsService {
       },
     });
 
-    const users = await Promise.all(
-      room?.chat.map(async (item) => {
-        return await this.prisma.user.findUnique({
-          where: { id: item.userId },
-        });
-      }),
-    );
-
-    return { ...room, users };
+    return room;
   }
 
   async remove(id: string) {

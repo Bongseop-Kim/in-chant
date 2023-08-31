@@ -35,8 +35,15 @@ export class ChatsGateway {
     this.logger.log('init');
   }
 
-  // 소켓은 토큰을 헤더로 받을 수 없어서 바디에 아이디를 직접 보내줬다.
-  // json으로 말고 객체 형태로 바로 보내줬다.
+  @SubscribeMessage('join_room')
+  joinRoom(@MessageBody() roomId: string, @ConnectedSocket() socket: Socket) {
+    socket.join(roomId);
+  }
+
+  @SubscribeMessage('leave_room')
+  leaveRoom(@MessageBody() roomId: string, @ConnectedSocket() socket: Socket) {
+    socket.leave(roomId);
+  }
 
   @SubscribeMessage('new_user')
   async handleNewUser(
@@ -44,7 +51,9 @@ export class ChatsGateway {
     @ConnectedSocket() socket: Socket,
   ) {
     await this.chatsService.newUser(newUser);
-    socket.broadcast.emit('user_connected', newUser.userName);
+    socket.broadcast
+      .to(newUser.roomId)
+      .emit('user_connected', newUser.userName);
   }
 
   @SubscribeMessage('submit_chat')
@@ -54,7 +63,7 @@ export class ChatsGateway {
   ) {
     const socketObj = await this.chatsService.createChat(createChat);
 
-    socket.broadcast.emit('new_chat', {
+    socket.to(createChat.roomId).emit('new_chat', {
       message: socketObj.message,
       // username: user.name,
       createdAt: socketObj.createdAt,
