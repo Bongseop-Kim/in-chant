@@ -59,6 +59,7 @@ export class ChatsGateway {
     this.server.emit(createChat.roomId, {
       message: socketObj.message,
       createdAt: socketObj.createdAt,
+      userName: socketObj.userName,
     });
   }
 }
