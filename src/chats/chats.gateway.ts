@@ -40,16 +40,6 @@ export class ChatsGateway {
     this.logger.log('init');
   }
 
-  @SubscribeMessage('join_room')
-  joinRoom(@MessageBody() roomId: string, @ConnectedSocket() socket: Socket) {
-    socket.join(roomId);
-  }
-
-  @SubscribeMessage('leave_room')
-  leaveRoom(@MessageBody() roomId: string, @ConnectedSocket() socket: Socket) {
-    socket.leave(roomId);
-  }
-
   @SubscribeMessage('new_user')
   async handleNewUser(
     @MessageBody() newUser: NewUserDto,
@@ -64,6 +54,7 @@ export class ChatsGateway {
   @SubscribeMessage('submit_chat')
   async handleSubmitChat(@MessageBody() createChat: CreateChatDto) {
     const socketObj = await this.chatsService.createChat(createChat);
+    console.log('메시지 발송' + createChat.message);
 
     this.server.emit(createChat.roomId, {
       message: socketObj.message,
