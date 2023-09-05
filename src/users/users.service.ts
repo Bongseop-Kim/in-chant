@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-users.dto';
 import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UserEntity } from './entities/users.entity';
 
 @Injectable()
 export class UsersService {
@@ -51,6 +52,15 @@ export class UsersService {
       },
     });
     return signUp.email;
+  }
+
+  async updateUser(user: UserEntity, token: string) {
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: token,
+    });
   }
 
   //auth에서 사용되는 API입니다.

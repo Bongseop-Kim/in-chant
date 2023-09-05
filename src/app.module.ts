@@ -4,9 +4,16 @@ import { AuthModule } from './auth/auth.module';
 import { ChatsModule } from './chats/chats.module';
 import { LoggerMiddleware } from './common/logger/logger.middleware';
 import { RoomsModule } from './rooms/rooms.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [UsersModule, AuthModule, ChatsModule, RoomsModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    UsersModule,
+    AuthModule,
+    ChatsModule,
+    RoomsModule,
+  ],
   controllers: [],
   providers: [],
 })

@@ -9,4 +9,7 @@ export class ChatEntity {
 
   @IsString()
   userId: string;
+
+  @IsString()
+  userName: string;
 }

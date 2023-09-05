@@ -12,5 +12,8 @@ export class UserEntity implements User {
   email: string;
 
   @IsString()
+  token: string;
+
+  @IsString()
   password: string;
 }

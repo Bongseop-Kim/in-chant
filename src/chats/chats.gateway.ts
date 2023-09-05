@@ -3,16 +3,21 @@ import {
   SubscribeMessage,
   MessageBody,
   ConnectedSocket,
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { ChatsService } from './chats.service';
 import { Logger } from '@nestjs/common';
-import { Socket } from 'socket.io';
+import { Socket, Server } from 'socket.io';
 import { NewUserDto } from './dto/new-user.dto';
 import { CreateChatDto } from './dto/create-chat.dto';
 
 @WebSocketGateway({ cors: true })
 export class ChatsGateway {
   private logger = new Logger('chat');
+
+  @WebSocketServer()
+  server: Server;
+
   constructor(private readonly chatsService: ChatsService) {
     this.logger.log('constructor');
   }
@@ -57,16 +62,14 @@ export class ChatsGateway {
   }
 
   @SubscribeMessage('submit_chat')
-  async handleSubmitChat(
-    @MessageBody() createChat: CreateChatDto,
-    @ConnectedSocket() socket: Socket,
-  ) {
+  async handleSubmitChat(@MessageBody() createChat: CreateChatDto) {
     const socketObj = await this.chatsService.createChat(createChat);
 
-    socket.to(createChat.roomId).emit('new_chat', {
+    this.server.emit(createChat.roomId, {
       message: socketObj.message,
-      // username: user.name,
       createdAt: socketObj.createdAt,
+      userName: socketObj.userName,
+      userId: socketObj.userId,
     });
   }
 }

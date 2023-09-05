@@ -39,4 +39,10 @@ export class UsersController {
   async logIn(@Body() data: RequestLoginDto) {
     return await this.authService.jwtLogIn(data);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('update')
+  async updateUser(@CurrentUser() User: UserEntity, @Body() token: string) {
+    return await this.usersService.updateUser(User, token);
+  }
 }

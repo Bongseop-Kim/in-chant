@@ -18,12 +18,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const user = await this.usersService.findUserByIdWithoutPassword(
       payload.sub,
     );
-    const { id, name, email } = user;
+    const { id, name, email, token } = user;
     if (user) {
       return {
         id,
         name,
         email,
+        token,
       }; //request.user
     } else {
       throw new UnauthorizedException('접근 오류');
