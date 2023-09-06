@@ -38,7 +38,7 @@ export class ChatsService {
         token: user.token,
         notification: {
           body: data.message,
-          title: user.name,
+          title: data.userName,
         },
       };
 
