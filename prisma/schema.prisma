@@ -47,3 +47,9 @@ model Member {
   room   Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
   roomId String @db.ObjectId
 }
+
+model Category {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  categoryName String
+  storeName    String
+}

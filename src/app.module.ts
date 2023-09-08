@@ -5,6 +5,7 @@ import { ChatsModule } from './chats/chats.module';
 import { LoggerMiddleware } from './common/logger/logger.middleware';
 import { RoomsModule } from './rooms/rooms.module';
 import { ConfigModule } from '@nestjs/config';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ConfigModule } from '@nestjs/config';
     AuthModule,
     ChatsModule,
     RoomsModule,
+    CategoryModule,
   ],
   controllers: [],
   providers: [],
